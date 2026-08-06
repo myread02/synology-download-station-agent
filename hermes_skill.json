@@ -1,0 +1,27 @@
+{
+  "name": "synology_download",
+  "display_name": "Synology Download Station",
+  "description": "Adds a magnet link or download URI to local Synology Download Station over LAN using uv.",
+  "command": "/download",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "magnet_uri": {
+        "type": "string",
+        "description": "The magnet link or URL to download"
+      }
+    },
+    "required": ["magnet_uri"]
+  },
+  "execution": {
+    "type": "local_command",
+    "command_template": "uv run python3 syno_add.py \"{magnet_uri}\"",
+    "environment_variables": [
+      "SYNO_LOCAL_IP",
+      "SYNO_LOCAL_PORT",
+      "SYNO_USE_HTTPS",
+      "SYNO_USER",
+      "SYNO_PASS"
+    ]
+  }
+}

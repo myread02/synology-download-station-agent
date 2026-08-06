@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "synology-download-station-agent"
+version = "1.0.0"
+description = "Local LAN Synology Download Station API pipeline for Hermes Agent & Telegram"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.28.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+synology-download-station-agent = "synology_download_station_agent.cli:main"
+syno-add = "syno_add:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["synology_download_station_agent", "syno_add.py"]
