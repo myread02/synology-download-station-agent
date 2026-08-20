@@ -150,6 +150,17 @@ class TestSynologyClient(unittest.TestCase):
         self.assertEqual(len(finished), 1)
         self.assertEqual(finished[0]["id"], "task_1")
 
+    @patch("synology_download_station_agent.poll.send_telegram_notification")
+    def test_cleanup_removes_seeding_tasks(self, _mock_notify):
+        self.client.list_tasks = MagicMock(return_value={
+            "data": {"tasks": [{"id": "task_1", "title": "done.iso", "status": "seeding"}]}
+        })
+        self.client.delete_task = MagicMock()
+
+        check_and_notify_finished_tasks(self.client, auto_cleanup=True)
+
+        self.client.delete_task.assert_called_once_with(["task_1"], force_complete=True)
+
 
 if __name__ == "__main__":
     unittest.main()

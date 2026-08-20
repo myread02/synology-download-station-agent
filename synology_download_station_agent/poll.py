@@ -48,8 +48,8 @@ def check_and_notify_finished_tasks(
 
     for task in tasks:
         status = str(task.get("status", "")).lower()
-        # Status 8 is finished in DSM API
-        if status in ("finished", "8", "completed"):
+        # Seeding means the download is complete but DSM is still uploading it.
+        if status in ("finished", "8", "completed", "done", "seeding", "9"):
             title = task.get("title", "Unknown Task")
             task_id = task.get("id")
             finished_tasks.append(task)
@@ -64,7 +64,7 @@ def check_and_notify_finished_tasks(
 
     if auto_cleanup and finished_task_ids:
         try:
-            client.delete_task(finished_task_ids)
+            client.delete_task(finished_task_ids, force_complete=True)
             print(f"[INFO] Cleaned up {len(finished_task_ids)} completed task(s).")
         except SynologyClientError as e:
             print(f"[ERROR] Failed to auto-cleanup tasks: {e}")
